@@ -35,7 +35,7 @@ export const PRODUCTS: Product[] = [
     price: 175,
     originalPrice: 250,
     match: 96,
-    image: '/assets/product_blazer.png',
+    image: './assets/product_blazer.png',
     category: 'Jackets',
   },
   {
@@ -45,7 +45,7 @@ export const PRODUCTS: Product[] = [
     price: 38,
     originalPrice: null,
     match: 93,
-    image: '/assets/product_tshirt.png',
+    image: './assets/product_tshirt.png',
     category: 'All',
   },
   {
@@ -55,7 +55,7 @@ export const PRODUCTS: Product[] = [
     price: 89,
     originalPrice: 120,
     match: 91,
-    image: '/assets/product_pants.png',
+    image: './assets/product_pants.png',
     category: 'All',
   },
   {
@@ -65,7 +65,7 @@ export const PRODUCTS: Product[] = [
     price: 295,
     originalPrice: null,
     match: 88,
-    image: '/assets/product_bag.png',
+    image: './assets/product_bag.png',
     category: 'Accessories',
   },
   {
@@ -75,7 +75,7 @@ export const PRODUCTS: Product[] = [
     price: 340,
     originalPrice: 425,
     match: 85,
-    image: '/assets/product_sneakers.png',
+    image: './assets/product_sneakers.png',
     category: 'Shoes',
   },
   {
@@ -85,7 +85,7 @@ export const PRODUCTS: Product[] = [
     price: 210,
     originalPrice: null,
     match: 82,
-    image: '/assets/product_sweater.png',
+    image: './assets/product_sweater.png',
     category: 'All',
   },
 ];

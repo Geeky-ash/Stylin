@@ -64,7 +64,7 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
     }, 1200);
   };
 
-  const heroSrc = previewUrl || '/assets/hero_outfit.png';
+  const heroSrc = previewUrl || './assets/hero_outfit.png';
 
   return (
     <div className="animate-fadeIn px-4 pt-2">

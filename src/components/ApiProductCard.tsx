@@ -20,7 +20,7 @@ export default function ApiProductCard({ product, index }: ApiProductCardProps) 
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = '/assets/product_blazer.png';
+              (e.target as HTMLImageElement).src = './assets/product_blazer.png';
             }}
           />
         ) : (
