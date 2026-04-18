@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const SERPAPI_KEY = process.env.SERPAPI_KEY;
+const SERPAPI_KEY = process.env.SERPAPI_KEY || 'a058a3aed5a2b173b823535bc9894f040d727192c09185dd8ad81d6e7777b22c';
 
 // ─── Middleware ───
 app.use(cors());
@@ -68,14 +68,20 @@ async function searchGoogleLens(imageUrl) {
     api_key: SERPAPI_KEY || '',
   });
 
-  const res = await fetch(`https://serpapi.com/search.json?${params}`);
+  try {
+    const res = await fetch(`https://serpapi.com/search.json?${params}`);
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`SerpApi returned ${res.status}: ${text}`);
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('[SerpApi] Failure:', res.status, text);
+      throw new Error(`AI could not process this image`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error(`[SerpApi] Network/fetch execution error:`, error);
+    throw new Error('AI could not process this image');
   }
-
-  return res.json();
 }
 
 // ─── POST /api/analyze — Main endpoint ───
@@ -132,9 +138,9 @@ app.post('/api/analyze', upload.single('image'), async (req, res) => {
     });
 
   } catch (err) {
-    console.error('[Analyze] Error:', err instanceof Error ? err.message : err);
-    res.status(500).json({
-      error: err instanceof Error ? err.message : 'Analysis failed',
+    console.error('[Analyze] Error caught:', err);
+    res.status(400).json({
+      error: 'AI could not process this image',
       success: false,
     });
   }

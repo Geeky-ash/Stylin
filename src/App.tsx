@@ -42,9 +42,7 @@ export default function App() {
     const file = selectedFileRef.current;
 
     if (!file) {
-      // No custom image selected — switch to results with mock data
-      setView('results');
-      setAnalysisStage('complete');
+      showToast('Upload Failed: No valid image selected. Please snap a photo first!');
       return;
     }
 
