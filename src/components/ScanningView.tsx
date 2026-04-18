@@ -2,18 +2,18 @@ import { useRef, useState, useEffect } from 'react';
 import { AI_PHRASES } from '../data';
 
 interface ScanningViewProps {
-  uploadedImage: string | null;
-  onImageUpload: (src: string) => void;
+  previewUrl: string | null;
+  onImageSelect: (file: File, dataUrl: string) => void;
   onScan: () => void;
 }
 
-export default function ScanningView({ uploadedImage, onImageUpload, onScan }: ScanningViewProps) {
+export default function ScanningView({ previewUrl, onImageSelect, onScan }: ScanningViewProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [phrase, setPhrase] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Cycle AI phrases
+  // Cycle AI status phrases
   useEffect(() => {
     const iv = setInterval(() => setPhrase((p) => (p + 1) % AI_PHRASES.length), 2200);
     return () => clearInterval(iv);
@@ -22,7 +22,8 @@ export default function ScanningView({ uploadedImage, onImageUpload, onScan }: S
   const handleFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      onImageUpload(e.target?.result as string);
+      const dataUrl = e.target?.result as string;
+      onImageSelect(file, dataUrl);
       setImageLoaded(false);
     };
     reader.readAsDataURL(file);
@@ -36,13 +37,14 @@ export default function ScanningView({ uploadedImage, onImageUpload, onScan }: S
 
   const handleScanClick = () => {
     setIsScanning(true);
+    // Brief delay to show the scanning animation before transitioning
     setTimeout(() => {
       setIsScanning(false);
       onScan();
-    }, 2000);
+    }, 1200);
   };
 
-  const heroSrc = uploadedImage || '/assets/hero_outfit.png';
+  const heroSrc = previewUrl || '/assets/hero_outfit.png';
 
   return (
     <div className="animate-fadeIn px-4 pt-2">
@@ -53,7 +55,6 @@ export default function ScanningView({ uploadedImage, onImageUpload, onScan }: S
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
-        {/* Image */}
         <img
           src={heroSrc}
           alt="Outfit to analyze"
@@ -135,7 +136,6 @@ export default function ScanningView({ uploadedImage, onImageUpload, onScan }: S
         )}
       </button>
 
-      {/* ─── Subtitle ─── */}
       <p className="mt-3 mb-2 text-center text-xs font-medium text-gray-400">
         Upload or snap a photo — AI detects your style in seconds
       </p>

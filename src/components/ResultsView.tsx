@@ -1,16 +1,30 @@
 import { useState, useMemo } from 'react';
 import { STYLE_TAGS, PRODUCTS, CATEGORIES } from '../data';
 import ProductCard from './ProductCard';
+import ApiProductCard from './ApiProductCard';
+import AnalysisProgress from './AnalysisProgress';
+import type { AnalysisStage, ApiProduct } from '../api';
 
 interface ResultsViewProps {
   showToast: (msg: string) => void;
+  analysisStage: AnalysisStage;
+  apiProducts: ApiProduct[];
+  apiError: string | null;
 }
 
-export default function ResultsView({ showToast }: ResultsViewProps) {
+export default function ResultsView({
+  showToast,
+  analysisStage,
+  apiProducts,
+  apiError,
+}: ResultsViewProps) {
   const [activeFilter, setActiveFilter] = useState<string>('All');
   const [cartItems, setCartItems] = useState<Set<number>>(new Set());
   const [wishlist, setWishlist] = useState<Set<number>>(new Set());
 
+  const hasApiResults = apiProducts.length > 0;
+
+  // Mock product filtering (used when no API results)
   const filteredProducts = useMemo(() => {
     if (activeFilter === 'All') return PRODUCTS;
     return PRODUCTS.filter((p) => p.category === activeFilter);
@@ -45,19 +59,42 @@ export default function ResultsView({ showToast }: ResultsViewProps) {
 
   return (
     <div className="animate-slideUp">
+      {/* ─── Analysis Progress Tracker ─── */}
+      <AnalysisProgress stage={analysisStage} />
+
+      {/* ─── Error State ─── */}
+      {apiError && (
+        <div className="mx-4 mb-4 rounded-2xl border border-red-200 bg-red-50 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-red-600">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+            Analysis Error
+          </div>
+          <p className="mt-1 text-xs text-red-500">{apiError}</p>
+          <p className="mt-2 text-xs text-gray-500">Showing curated picks instead.</p>
+        </div>
+      )}
+
       {/* ─── Detected Style Header ─── */}
-      <section className="px-4 pt-4 pb-2">
+      <section className="px-4 pt-2 pb-2">
         <div className="flex items-center justify-between mb-1">
           <h2 className="font-display text-xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
             <svg className="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
-            Your Vibe: Streetwear
+            {hasApiResults ? 'Visual Matches Found' : 'Your Vibe: Streetwear'}
           </h2>
         </div>
-        <p className="text-xs text-gray-500 mb-4">AI detected 6 style attributes from your outfit</p>
+        <p className="text-xs text-gray-500 mb-4">
+          {hasApiResults
+            ? `${apiProducts.length} products matched via Google Lens AI`
+            : 'AI detected 6 style attributes from your outfit'}
+        </p>
 
-        {/* Style Tags */}
+        {/* Style Tags (shown always) */}
         <div className="flex flex-wrap gap-2.5">
           {STYLE_TAGS.map((tag, i) => (
             <span
@@ -89,30 +126,38 @@ export default function ResultsView({ showToast }: ResultsViewProps) {
             </svg>
           </div>
           <div>
-            <div className="text-sm font-bold text-white">✨ Style Match: 96% Streetwear</div>
+            <div className="text-sm font-bold text-white">
+              {hasApiResults
+                ? `🔍 ${apiProducts.length} Products Matched`
+                : '✨ Style Match: 96% Streetwear'}
+            </div>
             <div className="text-[12px] leading-relaxed text-gray-400">
-              Your look aligns with Urban Streetwear trends. Here are curated picks that match your vibe.
+              {hasApiResults
+                ? 'Google Lens found visually similar products from real stores.'
+                : 'Your look aligns with Urban Streetwear trends. Here are curated picks that match your vibe.'}
             </div>
           </div>
         </div>
       </div>
 
-      {/* ─── Category Filters ─── */}
-      <div className="mb-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveFilter(cat)}
-            className={`flex-shrink-0 rounded-full px-5 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
-              activeFilter === cat
-                ? 'bg-accent text-white shadow-md shadow-accent-glow'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+      {/* ─── Category Filters (only for mock data) ─── */}
+      {!hasApiResults && (
+        <div className="mb-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className={`flex-shrink-0 rounded-full px-5 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                activeFilter === cat
+                  ? 'bg-accent text-white shadow-md shadow-accent-glow'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ─── Product Grid ─── */}
       <section className="px-4">
@@ -122,34 +167,72 @@ export default function ResultsView({ showToast }: ResultsViewProps) {
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
-            Shop Similar
+            {hasApiResults ? 'Shop These Products' : 'Shop Similar'}
           </h2>
           <button className="text-[13px] font-semibold text-accent hover:opacity-70 transition-opacity">
             View All
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3.5">
-          {filteredProducts.map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={i}
-              inCart={cartItems.has(product.id)}
-              inWishlist={wishlist.has(product.id)}
-              onAddToCart={handleAddToCart}
-              onToggleWishlist={handleToggleWishlist}
-            />
-          ))}
-        </div>
+        {/* Loading state while API is working */}
+        {(analysisStage === 'uploading' || analysisStage === 'uploaded' || analysisStage === 'identifying' || analysisStage === 'matching') && !hasApiResults && (
+          <div className="grid grid-cols-2 gap-3.5">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="overflow-hidden rounded-2xl border border-gray-200 bg-white animate-pulse">
+                <div className="aspect-square bg-gray-100" />
+                <div className="p-3 space-y-2">
+                  <div className="h-3 w-16 rounded bg-gray-100" />
+                  <div className="h-4 w-full rounded bg-gray-100" />
+                  <div className="flex justify-between">
+                    <div className="h-4 w-12 rounded bg-gray-100" />
+                    <div className="h-8 w-16 rounded-full bg-gray-100" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-        {filteredProducts.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <svg className="mb-3 h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <p className="text-sm font-medium">No items in this category yet</p>
+        {/* Real API product grid */}
+        {hasApiResults && (
+          <div className="grid grid-cols-2 gap-3.5">
+            {apiProducts.map((product, i) => (
+              <ApiProductCard key={product.id} product={product} index={i} />
+            ))}
+          </div>
+        )}
+
+        {/* Fallback mock product grid */}
+        {!hasApiResults && analysisStage === 'complete' && (
+          <div className="grid grid-cols-2 gap-3.5">
+            {filteredProducts.map((product, i) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={i}
+                inCart={cartItems.has(product.id)}
+                inWishlist={wishlist.has(product.id)}
+                onAddToCart={handleAddToCart}
+                onToggleWishlist={handleToggleWishlist}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Error fallback */}
+        {apiError && analysisStage === 'error' && (
+          <div className="grid grid-cols-2 gap-3.5">
+            {filteredProducts.map((product, i) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={i}
+                inCart={cartItems.has(product.id)}
+                inWishlist={wishlist.has(product.id)}
+                onAddToCart={handleAddToCart}
+                onToggleWishlist={handleToggleWishlist}
+              />
+            ))}
           </div>
         )}
       </section>
