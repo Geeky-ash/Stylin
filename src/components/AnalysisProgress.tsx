@@ -60,15 +60,15 @@ export default function AnalysisProgress({ stage, thumbnailUrl }: AnalysisProgre
               <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
             </svg>
           </div>
-          <h3 className="font-display text-sm font-bold text-gray-900 dark:text-gray-100">Analysis Progress</h3>
+          <h3 className="font-display text-sm font-bold text-gray-900 ">Analysis Progress</h3>
         </div>
         {stage === 'error' && (
-          <span className="rounded-full bg-red-100 dark:bg-red-500/20 px-2.5 py-0.5 text-[11px] font-semibold text-red-600 dark:text-red-400">
+          <span className="rounded-full bg-red-100  px-2.5 py-0.5 text-[11px] font-semibold text-red-600 ">
             Error
           </span>
         )}
         {stage === 'complete' && (
-          <span className="rounded-full bg-green-100 dark:bg-green-500/20 px-2.5 py-0.5 text-[11px] font-semibold text-green-600 dark:text-green-400">
+          <span className="rounded-full bg-green-100  px-2.5 py-0.5 text-[11px] font-semibold text-green-600 ">
             Done
           </span>
         )}
@@ -79,7 +79,7 @@ export default function AnalysisProgress({ stage, thumbnailUrl }: AnalysisProgre
         {/* Thumbnail Area */}
         {thumbnailUrl && (
           <div className="relative flex-shrink-0">
-            <div className={`relative h-20 w-16 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 ${isProcessing ? 'animate-liquidRipple' : ''} z-10`}>
+            <div className={`relative h-20 w-16 overflow-hidden rounded-xl bg-gray-100  ${isProcessing ? 'animate-liquidRipple' : ''} z-10`}>
               <img
                 src={thumbnailUrl}
                 alt="Analyzing"
@@ -88,7 +88,7 @@ export default function AnalysisProgress({ stage, thumbnailUrl }: AnalysisProgre
             </div>
             {/* Dark Mode glow backdrop for the liquid ripple */}
             {isProcessing && (
-              <div className="absolute inset-0 bg-accent/30 dark:bg-accent/50 blur-xl animate-pulse rounded-xl" />
+              <div className="absolute inset-0 bg-accent/30  blur-xl animate-pulse rounded-xl" />
             )}
           </div>
         )}
@@ -105,18 +105,18 @@ export default function AnalysisProgress({ stage, thumbnailUrl }: AnalysisProgre
               >
                 {/* Status Icon */}
                 {status === 'done' ? (
-                  <div className="grid h-5 w-5 flex-shrink-0 place-items-center rounded-full bg-green-500 dark:bg-accent animate-checkPop">
+                  <div className="grid h-5 w-5 flex-shrink-0 place-items-center rounded-full bg-green-500  animate-checkPop">
                     <svg className="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </div>
                 ) : status === 'active' ? (
                   <div className="grid h-5 w-5 flex-shrink-0 place-items-center">
-                    <div className="h-4 w-4 rounded-full border-[2px] border-gray-200 dark:border-gray-700 border-t-accent dark:border-t-accent animate-spin" />
+                    <div className="h-4 w-4 rounded-full border-[2px] border-gray-200  border-t-accent  animate-spin" />
                   </div>
                 ) : (
                   <div className="grid h-5 w-5 flex-shrink-0 place-items-center">
-                    <div className="h-4 w-4 rounded-full border-[2px] border-gray-200 dark:border-gray-700" />
+                    <div className="h-4 w-4 rounded-full border-[2px] border-gray-200 " />
                   </div>
                 )}
 
@@ -124,15 +124,15 @@ export default function AnalysisProgress({ stage, thumbnailUrl }: AnalysisProgre
                 <span
                   className={`text-xs font-medium transition-colors duration-300 ${
                     status === 'done'
-                      ? 'text-gray-900 dark:text-gray-100'
+                      ? 'text-gray-900 '
                       : status === 'active'
-                        ? 'text-accent dark:text-accent font-bold'
-                        : 'text-gray-400 dark:text-gray-600'
+                        ? 'text-accent  font-bold'
+                        : 'text-gray-400 '
                   }`}
                 >
                   {task.label}
                   {task.id === 'style' && status === 'done' && (
-                    <span className="ml-1 text-accent dark:text-[#5AC8FA] opacity-90">(Streetwear)</span>
+                    <span className="ml-1 text-accent  opacity-90">(Streetwear)</span>
                   )}
                 </span>
               </div>
@@ -143,3 +143,4 @@ export default function AnalysisProgress({ stage, thumbnailUrl }: AnalysisProgre
     </section>
   );
 }
+

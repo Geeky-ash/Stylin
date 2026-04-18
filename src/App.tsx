@@ -104,7 +104,7 @@ export default function App() {
 
       {/* Floating Camera FAB */}
       <button
-        onClick={() => window.dispatchEvent(new Event('trigger-camera'))}
+        onClick={() => document.getElementById('fileInput')?.click()}
         className="fixed bottom-[100px] right-[calc(50%-215px+20px)] z-50 flex h-[60px] w-[60px] items-center justify-center rounded-full bg-gradient-to-br from-accent to-[#5AC8FA] shadow-lg shadow-accent-glow transition-all duration-300 hover:scale-110 hover:rotate-8 active:scale-92 max-[430px]:right-5"
         aria-label="Open Camera"
       >
@@ -123,3 +123,4 @@ export default function App() {
     </div>
   );
 }
+

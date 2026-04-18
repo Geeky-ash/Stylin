@@ -45,7 +45,7 @@ export default function TabBar() {
   const [activeTab, setActiveTab] = useState('discover');
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-40 flex w-full max-w-[430px] -translate-x-1/2 justify-around border-t border-gray-200 dark:border-white/10 glass pb-[env(safe-area-inset-bottom,8px)] pt-2">
+    <nav className="fixed bottom-0 left-1/2 z-40 flex w-full max-w-[430px] -translate-x-1/2 justify-around border-t border-gray-200  glass pb-[env(safe-area-inset-bottom,8px)] pt-2">
       {TABS.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
@@ -78,3 +78,4 @@ export default function TabBar() {
     </nav>
   );
 }
+

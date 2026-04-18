@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { useRef, useState, useEffect } from 'react';
 import { AI_PHRASES } from '../data';
 
 interface ScanningViewProps {
@@ -9,6 +8,7 @@ interface ScanningViewProps {
 }
 
 export default function ScanningView({ previewUrl, onImageSelect, onScan }: ScanningViewProps) {
+  const fileRef = useRef<HTMLInputElement>(null);
   const [phrase, setPhrase] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -19,40 +19,20 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
     return () => clearInterval(iv);
   }, []);
 
-  // Listen for the floating action button click (dispatched from App.tsx)
-  useEffect(() => {
-    const handleFabClick = () => takePicture();
-    window.addEventListener('trigger-camera', handleFabClick);
-    return () => window.removeEventListener('trigger-camera', handleFabClick);
-  }, []);
+  const handleFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      onImageSelect(file, dataUrl);
+      setImageLoaded(false);
+    };
+    reader.readAsDataURL(file);
+  };
 
-  const takePicture = async () => {
-    try {
-      // Uses native camera on Android/iOS; uses file picker/webcam on Web
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.Uri,
-        source: CameraSource.Prompt, // Presents Camera or Gallery option natively
-      });
-
-      if (image.webPath) {
-        // Fetch the file as a Blob to pass to our existing FormData backend
-        const response = await fetch(image.webPath);
-        const blob = await response.blob();
-        
-        // Generate a random filename with the correct extension
-        const format = image.format || 'jpeg';
-        const file = new File([blob], `scan_${Date.now()}.${format}`, {
-          type: `image/${format}`,
-        });
-
-        onImageSelect(file, image.webPath);
-        setImageLoaded(false);
-      }
-    } catch (error) {
-      console.warn('Camera interaction cancelled or failed:', error);
-    }
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file?.type.startsWith('image/')) handleFile(file);
   };
 
   const handleScanClick = () => {
@@ -71,7 +51,9 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
       {/* ─── Scanner Container ─── */}
       <section
         className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-gray-900 shadow-2xl cursor-pointer group"
-        onClick={takePicture}
+        onClick={() => fileRef.current?.click()}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleDrop}
       >
         <img
           src={heroSrc}
@@ -95,11 +77,12 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="grid h-14 w-14 place-items-center rounded-2xl border-2 border-dashed border-white/40 bg-white/15 group-hover:border-accent group-hover:bg-accent/20 transition-all duration-300">
             <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-              <circle cx="12" cy="13" r="4" />
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
           </div>
-          <span className="text-sm font-medium text-white/80">Tap to snap a photo natively</span>
+          <span className="text-sm font-medium text-white/80">Tap to upload or drag a photo</span>
         </div>
 
         {/* Status Badge */}
@@ -117,6 +100,19 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
             <span className="text-sm font-semibold text-white">Processing your style...</span>
           </div>
         )}
+
+        <input
+          ref={fileRef}
+          id="fileInput"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleFile(file);
+            e.target.value = '';
+          }}
+        />
       </section>
 
       {/* ─── Scan Button ─── */}
@@ -140,7 +136,7 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
         )}
       </button>
 
-      <p className="mt-3 mb-2 text-center text-xs font-medium text-gray-400 dark:text-gray-500">
+      <p className="mt-3 mb-2 text-center text-xs font-medium text-gray-400">
         Upload or snap a photo — AI detects your style in seconds
       </p>
     </div>

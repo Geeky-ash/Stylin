@@ -52,8 +52,8 @@ export default function Walkthrough({ onComplete }: WalkthroughProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 dark:bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="mx-6 w-full max-w-[380px] rounded-3xl glass-card border border-white/20 dark:border-white/10 p-8 shadow-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60  backdrop-blur-md animate-fadeIn">
+      <div className="mx-6 w-full max-w-[380px] rounded-3xl glass-card border border-white/20  p-8 shadow-2xl relative overflow-hidden">
         {/* Step indicator */}
         <div className="mb-2 text-center text-[11px] font-semibold uppercase tracking-widest text-gray-400">
           Step {step + 1} of {STEPS.length}
@@ -68,10 +68,10 @@ export default function Walkthrough({ onComplete }: WalkthroughProps) {
 
         {/* Content */}
         <div className="text-center animate-fadeIn" key={`text-${step}`}>
-          <h2 className="mb-2 font-display text-xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="mb-2 font-display text-xl font-bold text-gray-900 ">
             {current.title}
           </h2>
-          <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-gray-500 ">
             {current.description}
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function Walkthrough({ onComplete }: WalkthroughProps) {
         <div className="mt-6 flex items-center justify-between gap-3">
           <button
             onClick={onComplete}
-            className="rounded-full px-5 py-2.5 text-sm font-semibold text-gray-400 dark:text-gray-500 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+            className="rounded-full px-5 py-2.5 text-sm font-semibold text-gray-400  transition-colors hover:text-gray-600 :text-gray-300"
           >
             Skip
           </button>
@@ -116,3 +116,4 @@ export default function Walkthrough({ onComplete }: WalkthroughProps) {
     </div>
   );
 }
+

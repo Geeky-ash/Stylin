@@ -8,11 +8,11 @@ interface ApiProductCardProps {
 export default function ApiProductCard({ product, index }: ApiProductCardProps) {
   return (
     <article
-      className="group overflow-hidden rounded-2xl glass-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-gray-300 dark:hover:border-white/10 animate-cardUp"
+      className="group overflow-hidden rounded-2xl glass-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-gray-300 :border-white/10 animate-cardUp"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800 border-b border-gray-200/50 dark:border-white/5">
+      <div className="relative aspect-square overflow-hidden bg-gray-100  border-b border-gray-200/50 ">
         {product.thumbnail ? (
           <img
             src={product.thumbnail}
@@ -58,11 +58,11 @@ export default function ApiProductCard({ product, index }: ApiProductCardProps) 
 
       {/* Info */}
       <div className="p-3">
-        <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-tight mb-2 line-clamp-2 min-h-[2.5em]">
+        <div className="text-sm font-semibold text-gray-900  leading-tight mb-2 line-clamp-2 min-h-[2.5em]">
           {product.title}
         </div>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-base font-bold text-gray-900 dark:text-gray-100 tabular-nums">
+          <span className="text-base font-bold text-gray-900  tabular-nums">
             {product.price || 'See price'}
           </span>
           <a
@@ -83,3 +83,4 @@ export default function ApiProductCard({ product, index }: ApiProductCardProps) 
     </article>
   );
 }
+
