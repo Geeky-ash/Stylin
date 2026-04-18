@@ -10,6 +10,7 @@ interface ResultsViewProps {
   analysisStage: AnalysisStage;
   apiProducts: ApiProduct[];
   apiError: string | null;
+  previewUrl: string | null;
 }
 
 export default function ResultsView({
@@ -17,6 +18,7 @@ export default function ResultsView({
   analysisStage,
   apiProducts,
   apiError,
+  previewUrl,
 }: ResultsViewProps) {
   const [activeFilter, setActiveFilter] = useState<string>('All');
   const [cartItems, setCartItems] = useState<Set<number>>(new Set());
@@ -60,7 +62,7 @@ export default function ResultsView({
   return (
     <div className="animate-slideUp">
       {/* ─── Analysis Progress Tracker ─── */}
-      <AnalysisProgress stage={analysisStage} />
+      <AnalysisProgress stage={analysisStage} thumbnailUrl={previewUrl} />
 
       {/* ─── Error State ─── */}
       {apiError && (
@@ -81,14 +83,14 @@ export default function ResultsView({
       {/* ─── Detected Style Header ─── */}
       <section className="px-4 pt-2 pb-2">
         <div className="flex items-center justify-between mb-1">
-          <h2 className="font-display text-xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
+          <h2 className="font-display text-xl font-bold tracking-tight text-gray-900 dark:text-gray-100 flex items-center gap-2">
             <svg className="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
             {hasApiResults ? 'Visual Matches Found' : 'Your Vibe: Streetwear'}
           </h2>
         </div>
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
           {hasApiResults
             ? `${apiProducts.length} products matched via Google Lens AI`
             : 'AI detected 6 style attributes from your outfit'}
@@ -102,7 +104,7 @@ export default function ResultsView({
               className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold tracking-wide cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] animate-tagPop ${
                 tag.primary
                   ? 'bg-accent text-white shadow-lg shadow-accent-glow'
-                  : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-accent/5 hover:text-accent hover:border-accent/20'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-white/5 hover:bg-accent/5 hover:text-accent dark:hover:text-accent hover:border-accent/20'
               }`}
               style={{ animationDelay: `${i * 80}ms` }}
             >
@@ -162,7 +164,7 @@ export default function ResultsView({
       {/* ─── Product Grid ─── */}
       <section className="px-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold tracking-tight text-gray-900 flex items-center gap-2">
+          <h2 className="font-display text-lg font-bold tracking-tight text-gray-900 dark:text-gray-100 flex items-center gap-2">
             <svg className="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />

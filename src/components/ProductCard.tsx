@@ -19,11 +19,11 @@ export default function ProductCard({
 }: ProductCardProps) {
   return (
     <article
-      className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-gray-300 animate-cardUp"
+      className="group overflow-hidden rounded-2xl glass-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-gray-300 dark:hover:border-white/10 animate-cardUp"
       style={{ animationDelay: `${index * 80}ms` }}
     >
-      {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
+      {/* Image Section */}
+      <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800 border-b border-gray-200/50 dark:border-white/5">
         <img
           src={product.image}
           alt={product.name}
@@ -62,16 +62,17 @@ export default function ProductCard({
         </button>
       </div>
 
-      {/* Info */}
+      {/* Content Section */}
       <div className="p-3">
-        <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">
+        <div className="mb-0.5 text-[10px] font-bold uppercase tracking-wider text-accent dark:text-[#5AC8FA]">
           {product.brand}
         </div>
-        <div className="text-sm font-semibold text-gray-900 leading-tight mb-2 line-clamp-2">
+        <h3 className="mb-2 text-sm font-semibold leading-tight text-gray-900 dark:text-gray-100 line-clamp-2 min-h-[2.5em]">
           {product.name}
-        </div>
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-base font-bold text-gray-900 tabular-nums">
+        </h3>
+
+        <div className="mt-auto flex items-center justify-between gap-2">
+          <span className="text-base font-bold text-gray-900 dark:text-gray-100">
             ${product.price}
             {product.originalPrice && (
               <span className="ml-1 text-xs font-medium text-gray-400 line-through">

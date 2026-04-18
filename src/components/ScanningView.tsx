@@ -136,7 +136,7 @@ export default function ScanningView({ previewUrl, onImageSelect, onScan }: Scan
         )}
       </button>
 
-      <p className="mt-3 mb-2 text-center text-xs font-medium text-gray-400">
+      <p className="mt-3 mb-2 text-center text-xs font-medium text-gray-400 dark:text-gray-500">
         Upload or snap a photo — AI detects your style in seconds
       </p>
     </div>

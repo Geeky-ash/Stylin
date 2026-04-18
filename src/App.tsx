@@ -97,6 +97,7 @@ export default function App() {
             analysisStage={analysisStage}
             apiProducts={apiProducts}
             apiError={apiError}
+            previewUrl={previewUrl}
           />
         )}
       </main>
